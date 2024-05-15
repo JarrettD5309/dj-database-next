@@ -3,43 +3,95 @@
 import db from "@/db";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { z } from "zod";
+
+const createTrackSchema = z.object({
+  artist: z.string().min(1).max(200),
+  songTitle: z.string().min(1).max(200),
+  genres: z.string().min(1).max(200).array().nonempty(),
+  bpm: z.coerce.number().gt(0).lt(1000),
+  position: z.string().min(1).max(200),
+  rpm: z.coerce.number().gt(0).lt(100),
+  release: z.string().min(1).max(500),
+  discogsLink: z.string().url(),
+  year: z.coerce.number().min(1800).max(2200),
+});
+
+interface CreateTrackFormState {
+  errors: {
+    artist?: string[];
+    songTitle?: string[];
+    genres?: string[];
+    bpm?: string[];
+    position?: string[];
+    rpm?: string[];
+    release?: string[];
+    discogsLink?: string[];
+    year?: string[];
+    _form?: string[];
+  }
+}
 
 export async function createTrack(
-    formState: { errors: string},
-    formData: FormData
-): Promise<{ errors: string}> {
+  formState: CreateTrackFormState,
+  formData: FormData
+): Promise<CreateTrackFormState> {
 
-    const artist = formData.get('artist') as string;
-    const song = formData.get('song') as string;
-    const genre = [formData.get('genre') as string];
-    const bpm = parseInt(formData.get('bpm') as string);
-    const position = formData.get('position') as string;
-    const rpm = parseInt(formData.get('rpm') as string);
-    const release = formData.get('release') as string;
-    const discogs = formData.get('discogs') as string;
-    const year = parseInt(formData.get('year') as string);
+  const validationResult = createTrackSchema.safeParse({
+    artist: formData.get('artist'),
+    songTitle: formData.get('song-title'),
+    genres: [formData.get('genres')],
+    bpm: formData.get('bpm'),
+    position: formData.get('position'),
+    rpm: formData.get('rpm'),
+    release: formData.get('release'),
+    discogsLink: formData.get('discogs-link'),
+    year: formData.get('year'),
+  });
 
-    if (!artist || !song || !genre || !bpm || !position || !rpm || !release || !discogs || !year) {
-        formState.errors = 'Missing required fields';
-        return formState;
-    }
+  if (!validationResult.success) {
+    console.log('val fail', validationResult.error.flatten().fieldErrors);
+    return {
+      errors: validationResult.error.flatten().fieldErrors
+    };
+  }
+
+  try {
 
     await db.track.create({
-        data: {
-            artist,
-            songTitle: song,
-            genres: genre,
-            bpm,
-            position,
-            rpm,
-            release,
-            discogsLink: discogs,
-            year,
-        },
+      data: {
+        artist: validationResult.data.artist,
+        songTitle: validationResult.data.songTitle,
+        genres: validationResult.data.genres,
+        bpm: validationResult.data.bpm,
+        position: validationResult.data.position,
+        rpm: validationResult.data.rpm,
+        release: validationResult.data.release,
+        discogsLink: validationResult.data.discogsLink,
+        year: validationResult.data.year,
+      },
     });
 
-    revalidatePath('/');
+  } catch (error: unknown) {
 
-    redirect('/');
+    if (error instanceof Error) {
+      return {
+        errors: {
+          _form: [error.message],
+        }
+      }
+    } else {
+      return {
+        errors: {
+          _form: ['An unknown error occurred'],
+        }
+      }
+    }
+
+  }
+
+  revalidatePath('/');
+
+  redirect('/');
 
 }
