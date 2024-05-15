@@ -50,7 +50,6 @@ export async function createTrack(
   });
 
   if (!validationResult.success) {
-    console.log('val fail', validationResult.error.flatten().fieldErrors);
     return {
       errors: validationResult.error.flatten().fieldErrors
     };
