@@ -1,3 +1,4 @@
+import TracksTable from "@/components/table/tracks-table";
 import db from "@/db";
 import Link from "next/link";
 
@@ -16,6 +17,9 @@ export default async function Home() {
             </div>
           );
         })}
+      </div>
+      <div>
+        <TracksTable />
       </div>
       <div className="py-3">
         <Link href={'/addtrack'} className="border rounded p-2 bg-blue-200">Add Track</Link>
