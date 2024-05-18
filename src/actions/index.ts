@@ -37,10 +37,19 @@ export async function createTrack(
   formData: FormData
 ): Promise<CreateTrackFormState> {
 
+  const genres = [];
+  if (formData.get('genre-one')) {
+    genres.push(formData.get('genre-one'));
+  };
+
+  if (formData.get('genre-two')) {
+    genres.push(formData.get('genre-two'));
+  };
+
   const validationResult = createTrackSchema.safeParse({
     artist: formData.get('artist'),
     songTitle: formData.get('song-title'),
-    genres: [formData.get('genres')],
+    genres: genres,
     bpm: formData.get('bpm'),
     position: formData.get('position'),
     rpm: formData.get('rpm'),

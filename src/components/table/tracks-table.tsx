@@ -1,12 +1,9 @@
-import db from "@/db";
 import { Track } from "@prisma/client";
 import TableItem from "./table-item";
 
 const GRID_HEADER_CLASS = 'border-l border-b border-black p-2 text-center font-semibold';
 
-export default async function TracksTable() {
-
-  const tracks: Track[] = await db.track.findMany();
+export default function TracksTable({ tracks }: { tracks: Track[] }) {
 
   return (
     <div className="grid grid-cols-[repeat(6,_auto)] border-t border-r border-black">

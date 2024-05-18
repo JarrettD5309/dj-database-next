@@ -3,6 +3,9 @@
 import { createTrack } from "@/actions";
 import { useFormState } from "react-dom";
 
+const LABEL_CLASS = 'w-28';
+const INPUT_CLASS = 'border rounded p-2 w-0 flex-auto';
+
 export default function AddTrackForm() {
   const [formState, action] = useFormState(createTrack, { errors: {} });
 
@@ -10,48 +13,50 @@ export default function AddTrackForm() {
     <form action={action}>
       <div className="flex flex-col gap-4">
         <div className="flex gap-4">
-          <label htmlFor="artist" className="w-32">Artist</label>
-          <input type="text" id="artist" name="artist" className="border rounded p-2 w-full" />
+          <label htmlFor="artist" className={LABEL_CLASS}>Artist</label>
+          <input type="text" id="artist" name="artist" className={INPUT_CLASS} />
         </div>
 
         <div className="flex gap-4">
-          <label htmlFor="song-title" className="w-32">Song Title</label>
-          <input type="text" id="song-title" name="song-title" className="border rounded p-2 w-full" />
+          <label htmlFor="song-title" className={LABEL_CLASS}>Song Title</label>
+          <input type="text" id="song-title" name="song-title" className={INPUT_CLASS} />
         </div>
 
         <div className="flex gap-4">
-          <label htmlFor="genres" className="w-32">Genres</label>
-          <input type="text" id="genres" name="genres" className="border rounded p-2 w-full" />
+          <label htmlFor="genre-one" className={LABEL_CLASS}>Genre 1</label>
+          <input type="text" id="genre-one" name="genre-one" className={INPUT_CLASS} />
+          <label htmlFor="genre-two" className={LABEL_CLASS}>Genre 2</label>
+          <input type="text" id="genre-two" name="genre-two" className={INPUT_CLASS} />
         </div>
 
         <div className="flex gap-4">
-          <label htmlFor="bpm" className="w-32">BPM</label>
-          <input type="text" id="bpm" name="bpm" className="border rounded p-2 w-full" />
+          <label htmlFor="bpm" className={LABEL_CLASS}>BPM</label>
+          <input type="text" id="bpm" name="bpm" className={INPUT_CLASS} />
         </div>
 
         <div className="flex gap-4">
-          <label htmlFor="position" className="w-32">Position</label>
-          <input type="text" id="position" name="position" className="border rounded p-2 w-full" />
+          <label htmlFor="position" className={LABEL_CLASS}>Position</label>
+          <input type="text" id="position" name="position" className={INPUT_CLASS} />
         </div>
 
         <div className="flex gap-4">
-          <label htmlFor="rpm" className="w-32">RPM</label>
-          <input type="text" id="rpm" name="rpm" className="border rounded p-2 w-full" />
+          <label htmlFor="rpm" className={LABEL_CLASS}>RPM</label>
+          <input type="text" id="rpm" name="rpm" className={INPUT_CLASS} />
         </div>
 
         <div className="flex gap-4">
-          <label htmlFor="release" className="w-32">Release Name</label>
-          <input type="text" id="release" name="release" className="border rounded p-2 w-full" />
+          <label htmlFor="release" className={LABEL_CLASS}>Release Name</label>
+          <input type="text" id="release" name="release" className={INPUT_CLASS} />
         </div>
 
         <div className="flex gap-4">
-          <label htmlFor="discogs-link" className="w-32">Discogs Link</label>
-          <input type="text" id="discogs-link" name="discogs-link" className="border rounded p-2 w-full" />
+          <label htmlFor="discogs-link" className={LABEL_CLASS}>Discogs Link</label>
+          <input type="text" id="discogs-link" name="discogs-link" className={INPUT_CLASS} />
         </div>
 
         <div className="flex gap-4">
-          <label htmlFor="year" className="w-32">Year</label>
-          <input type="text" id="year" name="year" className="border rounded p-2 w-full" />
+          <label htmlFor="year" className={LABEL_CLASS}>Year</label>
+          <input type="text" id="year" name="year" className={INPUT_CLASS} />
         </div>
 
         {/* {
