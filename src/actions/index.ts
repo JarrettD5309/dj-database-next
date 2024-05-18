@@ -1,5 +1,6 @@
 'use server';
 
+import { FormInputs } from "@/consts/enums";
 import db from "@/db";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -38,24 +39,24 @@ export async function createTrack(
 ): Promise<CreateTrackFormState> {
 
   const genres = [];
-  if (formData.get('genre-one')) {
-    genres.push(formData.get('genre-one'));
+  if (formData.get(FormInputs.GENRE_ONE)) {
+    genres.push(formData.get(FormInputs.GENRE_ONE));
   };
 
-  if (formData.get('genre-two')) {
-    genres.push(formData.get('genre-two'));
+  if (formData.get(FormInputs.GENRE_TWO)) {
+    genres.push(formData.get(FormInputs.GENRE_TWO));
   };
 
   const validationResult = createTrackSchema.safeParse({
-    artist: formData.get('artist'),
-    songTitle: formData.get('song-title'),
+    artist: formData.get(FormInputs.ARTIST),
+    songTitle: formData.get(FormInputs.SONG_TITLE),
     genres: genres,
-    bpm: formData.get('bpm'),
-    position: formData.get('position'),
-    rpm: formData.get('rpm'),
-    release: formData.get('release'),
-    discogsLink: formData.get('discogs-link'),
-    year: formData.get('year'),
+    bpm: formData.get(FormInputs.BPM),
+    position: formData.get(FormInputs.POSITION),
+    rpm: formData.get(FormInputs.RPM),
+    release: formData.get(FormInputs.RELEASE),
+    discogsLink: formData.get(FormInputs.DISCOGS_LINK),
+    year: formData.get(FormInputs.YEAR),
   });
 
   if (!validationResult.success) {
