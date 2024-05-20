@@ -1,3 +1,8 @@
+enum Directions {
+  ASCEND = 'asc',
+  DESCEND = 'desc',
+}
+
 enum FormInputs {
   ARTIST = 'artist',
   SONG_TITLE = 'song-title',
@@ -11,4 +16,16 @@ enum FormInputs {
   YEAR = 'year',
 }
 
-export { FormInputs };
+enum TrackInfo {
+  ARTIST = 'artist',
+  SONG_TITLE = 'songTitle',
+  GENRES = 'genres',
+  BPM = 'bpm',
+  POSITION = 'position',
+  RPM = 'rpm',
+  RELEASE = 'release',
+  DISCOGS_LINK = 'discogsLink',
+  YEAR = 'year',
+}
+
+export { FormInputs, TrackInfo, Directions };

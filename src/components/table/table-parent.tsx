@@ -1,5 +1,3 @@
-'use client';
-
 import { Track } from "@prisma/client";
 import GenreButtons from "../genre-buttons";
 import TracksTable from "./tracks-table";
@@ -7,10 +5,11 @@ import TracksTable from "./tracks-table";
 interface TablesParentProps {
   tracks: Track[];
   genres: { genres: string[] }[];
+  currentGenre: string;
 }
 
 export default function TableParent(
-  { tracks, genres }: TablesParentProps
+  { tracks, genres, currentGenre }: TablesParentProps
 ) {
 
   return (
@@ -19,7 +18,7 @@ export default function TableParent(
         <GenreButtons genres={genres} />
       </div>
       <div>
-        <TracksTable tracks={tracks} />
+        <TracksTable tracks={tracks} currentGenre={currentGenre} />
       </div>
     </>
   );
