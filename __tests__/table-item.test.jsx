@@ -15,7 +15,7 @@ const mockTrack = {
 };
 
 describe('TableItem', () => {
-  test('has a div with artist, and details is not open', () => {
+  test('has a div with artist, and details is not open because button was NOT clicked', () => {
 
     render(<TableItem track={mockTrack} />);
 
@@ -27,14 +27,14 @@ describe('TableItem', () => {
 
   });
 
-  test('has a Discogs Link when details is open', async () => {
+  test('has a Discogs Link when details is open because button was clicked', async () => {
 
     render(<TableItem track={mockTrack} />);
 
     const button = screen.getByRole('button');
     await user.click(button);
 
-    const discogsLink = screen.getByText(mockTrack.discogsLink);
+    const discogsLink = screen.getByRole('link', { name: mockTrack.discogsLink });
 
     expect(discogsLink).toBeInTheDocument();
 
