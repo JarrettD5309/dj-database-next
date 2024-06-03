@@ -15,17 +15,35 @@ const mockTrack = {
 };
 
 describe('TableItem', () => {
-  test('has a div with artist, and details is not open because button was NOT clicked', () => {
+  test('has a div with artist, songTitle, bpm, position, and rpm', () => {
+
+    const mockTrackVisibleBeforeClick = {
+      artist: mockTrack.artist,
+      songTitle: mockTrack.songTitle,
+      bpm: mockTrack.bpm,
+      position: mockTrack.position,
+      rpm: mockTrack.rpm
+    };
 
     render(<TableItem track={mockTrack} />);
 
-    const artist = screen.getByText(mockTrack.artist);
-    const discogsLink = screen.queryByText(mockTrack.discogsLink);
+    for (let key in mockTrackVisibleBeforeClick) {
+      const value = mockTrackVisibleBeforeClick[key];
 
-    expect(artist).toBeInTheDocument();
-    expect(discogsLink).not.toBeInTheDocument();
+      const valueDiv = screen.queryByText(new RegExp(value));
+
+      expect(valueDiv).toBeInTheDocument();
+    }
 
   });
+
+  test('should not have a Discogs Link before button is clicked', () => {
+    render(<TableItem track={mockTrack} />);
+
+    const discogsLink = screen.queryByText(mockTrack.discogsLink);
+
+    expect(discogsLink).not.toBeInTheDocument();
+  })
 
   test('has a Discogs Link when details is open because button was clicked', async () => {
 
