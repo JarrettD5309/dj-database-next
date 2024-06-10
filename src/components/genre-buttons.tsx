@@ -1,3 +1,4 @@
+import { handleGenreButtonClick } from "@/actions";
 import { redirect } from "next/navigation";
 
 interface GenreButtonsProps {
@@ -14,8 +15,7 @@ export default function GenreButtons({ genres }: GenreButtonsProps) {
 
   const handleGenreButtonOnClick = async (data: FormData) => {
     'use server';
-    const genre = data.get('genre');
-    redirect(`/?genre=${genre}`);
+    await handleGenreButtonClick(data);
   };
 
   return (

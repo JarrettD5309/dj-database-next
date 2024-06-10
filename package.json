@@ -14,8 +14,8 @@
     "@prisma/client": "^5.14.0",
     "next": "14.2.3",
     "prisma": "^5.14.0",
-    "react": "^18",
-    "react-dom": "^18",
+    "react": "^19.0.0-rc-20b6f4c0e8-20240607",
+    "react-dom": "^19.0.0-rc-20b6f4c0e8-20240607",
     "zod": "^3.23.8"
   },
   "devDependencies": {

@@ -14,9 +14,12 @@ const mockTrack = {
   discogsLink: 'https://www.discogs.com/The-Beatles-Yellow-Submarine/release/123456',
 };
 
+function renderComponent() {
+  render(<TableItem track={mockTrack} />);
+}
+
 describe('TableItem', () => {
   test('has a div with artist, songTitle, bpm, position, and rpm', () => {
-
     const mockTrackVisibleBeforeClick = {
       artist: mockTrack.artist,
       songTitle: mockTrack.songTitle,
@@ -25,7 +28,7 @@ describe('TableItem', () => {
       rpm: mockTrack.rpm
     };
 
-    render(<TableItem track={mockTrack} />);
+    renderComponent();
 
     for (let key in mockTrackVisibleBeforeClick) {
       const value = mockTrackVisibleBeforeClick[key];
@@ -34,20 +37,18 @@ describe('TableItem', () => {
 
       expect(valueDiv).toBeInTheDocument();
     }
-
   });
 
   test('should not have a Discogs Link before button is clicked', () => {
-    render(<TableItem track={mockTrack} />);
+    renderComponent();
 
     const discogsLink = screen.queryByText(mockTrack.discogsLink);
 
     expect(discogsLink).not.toBeInTheDocument();
-  })
+  });
 
   test('has a Discogs Link when details is open because button was clicked', async () => {
-
-    render(<TableItem track={mockTrack} />);
+    renderComponent();
 
     const button = screen.getByRole('button');
     await user.click(button);
@@ -55,6 +56,5 @@ describe('TableItem', () => {
     const discogsLink = screen.getByRole('link', { name: mockTrack.discogsLink });
 
     expect(discogsLink).toBeInTheDocument();
-
   });
 });
