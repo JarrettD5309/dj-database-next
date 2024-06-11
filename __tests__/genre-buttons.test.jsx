@@ -1,8 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import GenreButtons from '../src/components/genre-buttons';
 import user from '@testing-library/user-event';
-// import * as actions from '../src/actions/handle-genre-button-click';
-// import * as handleGenreButtonClick from '../src/actions/handle-genre-button-click';
 import { handleGenreButtonClick } from "../src/actions/handle-genre-button-click";
 
 const mockGenres = [
@@ -13,13 +11,13 @@ const mockGenres = [
 
 const mockUniqueGenres = ['rock', 'blues', 'folk'];
 
-function renderComponent(genresProp) {
-  render(<GenreButtons genres={genresProp} />);
-}
-
 jest.mock('../src/actions/handle-genre-button-click', () => ({
   handleGenreButtonClick: jest.fn()
 }));
+
+function renderComponent(genresProp) {
+  render(<GenreButtons genres={genresProp} />);
+}
 
 describe('GenreButtons', () => {
   test('has one button with text all genres even if genres prop is empty', () => {
