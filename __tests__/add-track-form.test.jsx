@@ -59,6 +59,16 @@ describe('AddTrackForm', () => {
     expect(inputs).toHaveLength(inputLabels.length);
   });
 
+  test('should NOT have a red error box when there are no errors', () => {
+    renderComponent();
+
+    // screen.logTestingPlaygroundURL();
+
+    const errorDiv = screen.queryByTestId('error-div');
+
+    expect(errorDiv).not.toBeInTheDocument();
+  });
+
   describe('form errors', () => {
     test('should show an error message when artist input is empty', async () => {
       renderComponent();

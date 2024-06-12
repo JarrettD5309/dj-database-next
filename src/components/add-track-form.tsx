@@ -10,6 +10,16 @@ const INPUT_CLASS = 'border rounded p-2 w-0 flex-auto';
 export default function AddTrackForm() {
   const [formState, action] = useFormState(createTrack, { errors: {} });
 
+  function isObjEmpty(obj: Object) {
+    for (const prop in obj) {
+      if (Object.hasOwn(obj, prop)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   return (
     <form action={action}>
       <div className="flex flex-col gap-4">
@@ -66,11 +76,11 @@ export default function AddTrackForm() {
             :
             null
         } */}
+      
         {
-          formState?.errors ?
-            <div className="rounded p-2 bg-red-200 border border-red-400">{JSON.stringify(formState.errors)}</div>
-            :
-            null
+          isObjEmpty(formState?.errors) ?
+            null :
+            <div data-testid="error-div" className="rounded p-2 bg-red-200 border border-red-400">{JSON.stringify(formState.errors)}</div>
         }
 
         <button type="submit" className="rounded p-2 bg-blue-200">Submit</button>
