@@ -1,6 +1,7 @@
 'use client';
 
 import { Track } from "@prisma/client";
+import Link from "next/link";
 import { useState } from "react";
 
 const GRID_ITEM_CLASS = 'border-l border-b border-black p-2 text-center';
@@ -32,7 +33,10 @@ export default function TableItem({ track }: { track: Track }) {
           <p>Genres: {track.genres.join(', ')}</p>
           <p>Release: {track.release}</p>
           <p>Year: {track.year}</p>
-          <p>Discogs: <a href={track.discogsLink} className={ANCHOR_CLASS} target="_blank" rel="noreferrer">{track.discogsLink}</a></p> 
+          <p>Discogs: <a href={track.discogsLink} className={ANCHOR_CLASS} target="_blank" rel="noreferrer">{track.discogsLink}</a></p>
+          <div className="py-3 mt-2">
+            <Link href={`/track/${track.id}`} className="border rounded p-2 bg-blue-200">Edit Track</Link>
+          </div>
         </div>
       )}
     </>
