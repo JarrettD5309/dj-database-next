@@ -1,18 +1,7 @@
 import { render, screen } from "@testing-library/react"
-import TableItem from '../src/components/table/table-item';
+import TableItem from '../../src/components/table/table-item';
 import user from '@testing-library/user-event';
-
-const mockTrack = {
-  artist: 'The Beatles',
-  songTitle: 'Yellow Submarine',
-  bpm: 90,
-  position: 'A1',
-  rpm: 33,
-  genres: ['Rock'],
-  release: 'Yellow Submarine',
-  year: 1969,
-  discogsLink: 'https://www.discogs.com/The-Beatles-Yellow-Submarine/release/123456',
-};
+import { mockTrack } from "../consts/mocks";
 
 function renderComponent() {
   render(<TableItem track={mockTrack} />);

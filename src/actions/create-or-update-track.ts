@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
-const createTrackSchema = z.object({
+const createOrUpdateTrackSchema = z.object({
   [TrackInfo.ARTIST]: z.string().min(1).max(200),
   [TrackInfo.SONG_TITLE]: z.string().min(1).max(200),
   [TrackInfo.GENRES]: z.string().min(1).max(200).array().nonempty(),
@@ -18,7 +18,7 @@ const createTrackSchema = z.object({
   [TrackInfo.YEAR]: z.coerce.number().min(1800).max(2200),
 });
 
-interface CreateTrackFormState {
+interface CreateOrUpdateTrackFormState {
   errors: {
     [TrackInfo.ARTIST]?: string[];
     [TrackInfo.SONG_TITLE]?: string[];
@@ -33,10 +33,10 @@ interface CreateTrackFormState {
   }
 }
 
-export async function createTrack(
-  formState: CreateTrackFormState,
+export async function createOrUpdateTrack(
+  formState: CreateOrUpdateTrackFormState,
   formData: FormData
-): Promise<CreateTrackFormState> {
+): Promise<CreateOrUpdateTrackFormState> {
 
   const genres = [];
   if (formData.get(FormInputs.GENRE_ONE)) {
@@ -47,7 +47,7 @@ export async function createTrack(
     genres.push(formData.get(FormInputs.GENRE_TWO));
   };
 
-  const validationResult = createTrackSchema.safeParse({
+  const validationResult = createOrUpdateTrackSchema.safeParse({
     [TrackInfo.ARTIST]: formData.get(FormInputs.ARTIST),
     [TrackInfo.SONG_TITLE]: formData.get(FormInputs.SONG_TITLE),
     [TrackInfo.GENRES]: genres,
@@ -67,19 +67,38 @@ export async function createTrack(
 
   try {
 
-    await db.track.create({
-      data: {
-        [TrackInfo.ARTIST]: validationResult.data[TrackInfo.ARTIST],
-        [TrackInfo.SONG_TITLE]: validationResult.data[TrackInfo.SONG_TITLE],
-        [TrackInfo.GENRES]: validationResult.data[TrackInfo.GENRES],
-        [TrackInfo.BPM]: validationResult.data[TrackInfo.BPM],
-        [TrackInfo.POSITION]: validationResult.data[TrackInfo.POSITION],
-        [TrackInfo.RPM]: validationResult.data[TrackInfo.RPM],
-        [TrackInfo.RELEASE]: validationResult.data[TrackInfo.RELEASE],
-        [TrackInfo.DISCOGS_LINK]: validationResult.data[TrackInfo.DISCOGS_LINK],
-        [TrackInfo.YEAR]: validationResult.data[TrackInfo.YEAR],
-      },
-    });
+    if (formData.get(FormInputs.ID)) {
+      await db.track.update({
+        where: {
+          id: formData.get(FormInputs.ID) as string
+        },
+        data: {
+          [TrackInfo.ARTIST]: validationResult.data[TrackInfo.ARTIST],
+          [TrackInfo.SONG_TITLE]: validationResult.data[TrackInfo.SONG_TITLE],
+          [TrackInfo.GENRES]: validationResult.data[TrackInfo.GENRES],
+          [TrackInfo.BPM]: validationResult.data[TrackInfo.BPM],
+          [TrackInfo.POSITION]: validationResult.data[TrackInfo.POSITION],
+          [TrackInfo.RPM]: validationResult.data[TrackInfo.RPM],
+          [TrackInfo.RELEASE]: validationResult.data[TrackInfo.RELEASE],
+          [TrackInfo.DISCOGS_LINK]: validationResult.data[TrackInfo.DISCOGS_LINK],
+          [TrackInfo.YEAR]: validationResult.data[TrackInfo.YEAR],
+        },
+      });
+    } else {
+      await db.track.create({
+        data: {
+          [TrackInfo.ARTIST]: validationResult.data[TrackInfo.ARTIST],
+          [TrackInfo.SONG_TITLE]: validationResult.data[TrackInfo.SONG_TITLE],
+          [TrackInfo.GENRES]: validationResult.data[TrackInfo.GENRES],
+          [TrackInfo.BPM]: validationResult.data[TrackInfo.BPM],
+          [TrackInfo.POSITION]: validationResult.data[TrackInfo.POSITION],
+          [TrackInfo.RPM]: validationResult.data[TrackInfo.RPM],
+          [TrackInfo.RELEASE]: validationResult.data[TrackInfo.RELEASE],
+          [TrackInfo.DISCOGS_LINK]: validationResult.data[TrackInfo.DISCOGS_LINK],
+          [TrackInfo.YEAR]: validationResult.data[TrackInfo.YEAR],
+        },
+      });
+    }  
 
   } catch (error: unknown) {
 

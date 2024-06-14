@@ -4,6 +4,7 @@ enum Directions {
 }
 
 enum FormInputs {
+  ID = 'id',
   ARTIST = 'artist',
   SONG_TITLE = 'song-title',
   GENRE_ONE = 'genre-one',
