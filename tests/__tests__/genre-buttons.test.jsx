@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
-import GenreButtons from '../src/components/genre-buttons';
+import GenreButtons from '../../src/components/genre-buttons';
 import user from '@testing-library/user-event';
-import { handleGenreButtonClick } from "../src/actions/handle-genre-button-click";
+import { handleGenreButtonClick } from "../../src/actions/handle-genre-button-click";
 
 const mockGenres = [
   { genres: ['rock'] },
@@ -11,7 +11,7 @@ const mockGenres = [
 
 const mockUniqueGenres = ['rock', 'blues', 'folk'];
 
-jest.mock('../src/actions/handle-genre-button-click', () => ({
+jest.mock('../../src/actions/handle-genre-button-click', () => ({
   handleGenreButtonClick: jest.fn()
 }));
 
