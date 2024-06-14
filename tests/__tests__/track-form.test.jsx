@@ -2,8 +2,8 @@ import { render, screen } from "@testing-library/react";
 import TrackForm from '../../src/components/track-form';
 import user from '@testing-library/user-event';
 import { createOrUpdateTrack } from "../../src/actions/create-or-update-track";
-import { describe, mock } from "node:test";
 import { mockTrack } from "../consts/mocks";
+import db from "../../src/db";
 
 const inputLabels = [
   'Artist',
@@ -17,6 +17,23 @@ const inputLabels = [
   'Discogs Link',
   'Year'
 ];
+
+jest.mock('../../src/db', () => ({
+  track: {
+    create: jest.fn(),
+    update: jest.fn()
+  }
+}));
+
+jest.mock('next/cache', () => ({
+  ...jest.requireActual(),
+  revalidatePath: jest.fn()
+}));
+
+jest.mock('next/navigation', () => ({
+  ...jest.requireActual(),
+  redirect: jest.fn()
+}));
 
 function renderComponent(formStateFunc = createOrUpdateTrack, trackObj) {
   if (trackObj) {
@@ -98,32 +115,32 @@ describe('TrackForm', () => {
       expect(errorDiv).not.toBeInTheDocument();
     });
 
-    test('createOrUpdateTrack should be called if a valid form is submitted', async () => {
+    test('db.track.create should be called if a valid form is submitted', async () => {
+      renderComponent();
 
-      const createOrUpdateTrackMock = jest.fn();
-      renderComponent(createOrUpdateTrackMock);
-
-      for (let label of inputLabels) {
-        if (label === 'BPM' || label === 'RPM') {
-          const input = screen.getByRole('textbox', { name: new RegExp(label) });
-          await user.click(input);
-          await user.keyboard('99');
-        } else if (label === 'Discogs Link') {
-          const input = screen.getByRole('textbox', { name: new RegExp(label) });
-          await user.click(input);
-          await user.keyboard('https://www.test.com');
-        } else {
-          const input = screen.getByRole('textbox', { name: new RegExp(label) });
-          await user.click(input);
-          await user.keyboard('1900');
-        }
-      }
+      await fillForm();
 
       const button = screen.getByRole('button');
 
       await user.click(button);
 
-      expect(createOrUpdateTrackMock).toHaveBeenCalled();
+      expect(db.track.create).toHaveBeenCalled();
+      expect(db.track.update).not.toHaveBeenCalled();
+    });
+
+    test('db.track.create should NOT be called if an invalid form is submitted', async () => {
+      renderComponent();
+
+      const Artist = inputLabels[0];
+
+      await fillForm(Artist);
+
+      const button = screen.getByRole('button');
+
+      await user.click(button);
+
+      expect(db.track.create).not.toHaveBeenCalled();
+      expect(db.track.update).not.toHaveBeenCalled();
     });
 
     describe('form errors', () => {
@@ -177,16 +194,32 @@ describe('TrackForm', () => {
       expect(errorDiv).not.toBeInTheDocument();
     });
 
-    test('createOrUpdateTrack should be called if a valid form is submitted', async () => {
-
-      const createOrUpdateTrackMock = jest.fn();
-      renderComponent(createOrUpdateTrackMock, mockTrack);
+    test('db.track.update should be called if a valid form is submitted', async () => {
+      renderComponent(createOrUpdateTrack, mockTrack);
 
       const button = screen.getByRole('button');
 
       await user.click(button);
 
-      expect(createOrUpdateTrackMock).toHaveBeenCalled();
+      expect(db.track.update).toHaveBeenCalled();
+      expect(db.track.create).not.toHaveBeenCalled();
+    });
+
+    test('db.track.update should NOT be called if an invalid form is submitted', async () => {
+      renderComponent(createOrUpdateTrack, mockTrack);
+
+      const Artist = inputLabels[0];
+
+      const input = screen.getByRole('textbox', { name: new RegExp(Artist) });
+      await user.click(input);
+      await user.clear(input);
+
+      const button = screen.getByRole('button');
+
+      await user.click(button);
+
+      expect(db.track.update).not.toHaveBeenCalled();
+      expect(db.track.create).not.toHaveBeenCalled();
     });
 
     describe('form errors', () => {
